@@ -207,12 +207,22 @@ async fn main() -> Result<()> {
 }
 
 fn init_tracing() {
-    use tracing_subscriber::EnvFilter;
+    use std::io::{self, IsTerminal};
+    use tracing_subscriber::{fmt::writer::BoxMakeWriter, EnvFilter};
+
+    let terminal = io::stderr().is_terminal();
+    let writer = if terminal {
+        BoxMakeWriter::new(io::stderr)
+    } else {
+        BoxMakeWriter::new(io::stdout)
+    };
+
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info")),
         )
-        .with_writer(std::io::stderr)
+        .with_ansi(terminal)
+        .with_writer(writer)
         .init();
 }
 

@@ -24,5 +24,8 @@ tracing-subscriber = { workspace = true }
 arc-swap = { workspace = true }
 sysinfo = { workspace = true }
 
+[build-dependencies]
+winresource = { version = "0.1.31", default-features = false }
+
 [dev-dependencies]
 reqwest = { workspace = true }
